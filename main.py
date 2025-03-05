@@ -53,3 +53,11 @@ def buscar_doutrina(autor: str):
     return [{"id": r[0], "autor": r[1], "titulo": r[2], "conteudo": r[3], "referencia": r[4]} for r in resultados]
 
 # Iniciar a API usando: `uvicorn main:app --reload`
+
+@app.get("/pesquisa/")
+def pesquisa(termo: str):
+    cursor.execute("SELECT * FROM doutrinas WHERE conteudo LIKE ?", ('%' + termo + '%',))
+    resultados = cursor.fetchall()
+    if not resultados:
+        raise HTTPException(status_code=404, detail="Nenhum resultado encontrado.")
+    return [{"id": r[0], "categoria": r[1], "autor": r[2], "titulo": r[3], "conteudo": r[4], "referencia": r[5]} for r in resultados]
